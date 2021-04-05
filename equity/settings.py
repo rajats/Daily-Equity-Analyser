@@ -69,7 +69,7 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_BEAT_SCHEDULE = {
     "download-and-cache-each-day-at-1800-hrs": {  
         "task": "downloads_and_cache_the_csv_file",  
-        'schedule': crontab(hour=4, minute=17),
+        'schedule': crontab(hour=18, minute=0),
     },
 }
 
