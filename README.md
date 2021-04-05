@@ -33,7 +33,8 @@ This web application downloads the equity bhavcopy zip every day at 18:00 IST fo
 	$ sudo apt install python3-venv
 	$ python3 -m venv <project venv>
 	$ source <project venv>/bin/activate
-	$ git clone url and cd into folder
+	$ git clone [https://github.com/rajats/Levitt-Measure-Prediction-Dashboard.git](https://github.com/rajats/Levitt-Measure-Prediction-Dashboard.git)
+	$ cd Daily-Equity-Analyser
 	$ pip3 install wheel
 	$ pip install -r requirements.txt
      ```
