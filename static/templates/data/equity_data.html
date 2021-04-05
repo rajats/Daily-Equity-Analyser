@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+  <div id="search-company">
+    <div class="container">
+      <form class="form-inline my-2 my-md-0" @submit.prevent="performSearch()">
+        <div class="row">
+          <div class="col-11">
+            <input class="form-control form-control-lg form-control-borderless" type="search" name="searchquery" placeholder="search by company name eg: abb ltd." v-model="query">
+          </div>
+          <div class="col-1">
+            <button class="btn btn-lg btn-success" type="submit">Search</button>
+          </div>
+        </div>
+      </form>
+      <a href="{% url 'list_company_names' %}" target="_blank" rel="noopener noreferrer">List of Company Names</a>
+
+      <table v-if="companies.length" class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Company Code</th>
+            <th scope="col">Company Name</th>
+            <th scope="col">Open</th>
+            <th scope="col">High</th>
+            <th scope="col">Low</th>
+            <th scope="col">Close</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="company in companies" :key="company.code">
+            <td>[[ company.company_code ]]</td>
+            <td>[[ company.company_name ]]</td>
+            <td>[[ company.open ]]</td>
+            <td>[[ company.high ]]</td>
+            <td>[[ company.low ]]</td>
+            <td>[[ company.close ]]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    const SearchApp = {
+        data() {
+            return {
+                query: '',
+                companies: []
+            }
+        },
+        delimiters: ['[[', ']]'],
+        methods: {
+            performSearch() {
+                var data = {
+                    'query': this.query,
+                }
+                fetch('/data/search/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((result) => {
+                    //console.log(result.company)
+                    if (_.findWhere(this.companies, result.company) == null) {
+                      this.companies.push(result.company)
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error', error)
+                })
+            }
+        }
+    }
+    Vue.createApp(SearchApp).mount('#search-company')
+  </script>
+{% endblock %}
