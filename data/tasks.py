@@ -13,7 +13,6 @@ def download_and_cache_csv():
     Downloads the CSV file, clear the cache, populate the cache with new data
     '''
     today = datetime.datetime.now()
-    today = today -datetime.timedelta(1)
     dmy = today.strftime("%d-%m-%Y").split("-")
     file_name = "EQ"+dmy[0]+dmy[1]+dmy[2][2:]
     url = "https://www.bseindia.com/download/BhavCopy/Equity/"+file_name+"_CSV.ZIP"
