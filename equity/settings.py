@@ -1,12 +1,15 @@
 import os
 from pathlib import Path
+
+from decouple import config
+
 from celery.schedules import crontab
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '6myxsg0(-k@9^fu)(#-e0l9)awwt^3s@b3p7=$-qw(@$36@lpi'
+SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -53,17 +56,17 @@ WSGI_APPLICATION = 'equity.wsgi.application'
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "BACKEND": config('CACHE_BACKEND'),
+        "LOCATION": config('CACHE_LOCATION'),
         "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+            "CLIENT_CLASS": config('CACHE_CLIENT_CLASS')
         },
     }
 }
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
-CELERY_TIMEZONE = 'Asia/Kolkata'
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
+CELERY_TIMEZONE = config('CELERY_TIMEZONE')
 
 # Download the CSV everyday at 18:00 Hours
 CELERY_BEAT_SCHEDULE = {
