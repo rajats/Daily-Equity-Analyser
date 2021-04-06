@@ -62,25 +62,18 @@ def get_cached_file_name_and_company_names(today):
 
 def home(request):
     '''
-    view for home page
+    In homepage send list of companies to populate the dropdown
     '''
     context = {}
-    return render(request, "data/equity_data.html", context)
-
-# This is not implemented, it was not working with chrome.
-# Will be needed if populate the dropdown via backend. 
-def dropdown_data(request):
-    '''
-    Returns json of company names. This API will be used to populate the dropdown 
-    '''
     today = datetime.datetime.now()
     _, all_company_names = get_cached_file_name_and_company_names(today)
-    all_company_name_objs = []
-    for company_name in all_company_names:
-        all_company_name_objs.append({'name':company_name})
-    return JsonResponse({'company_names': all_company_name_objs})
+    context['company_names'] = all_company_names
+    return render(request, "data/equity_data.html", context)
 
 def list_company_names(request):
+    '''
+    Optional: Displays all list of companies
+    '''
     context = {}
     today = datetime.datetime.now()
     _, all_company_names = get_cached_file_name_and_company_names(today)
