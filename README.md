@@ -83,22 +83,35 @@ An example .env file looks like:
  ```bash
 	 $ heroku addons:create heroku-redis:hobby-dev -a <heroku-app-name>
    ```
- 4. Change the credentials of Redis and Celery Broker with Heroku Redis credential.  To get the Heroku Redis credential type:
+ 4. It's important to change the timezone of Heroku app.
+ ```bash
+	 $ heroku config:add TZ="Asia/Kolkata"
+```
+ 5. Change the credentials of Redis and Celery Broker with Heroku Redis credential.  To get the Heroku Redis credential type:
  ```bash
 	 $ heroku config
 ```
-3. Copy the Heroku Redis URL, open the .env file and replace CACHE_LOCATION, CELERY_BROKER_URL and CELERY_RESULT_BACKEND with the copied Heroku Redis URL. Change DEBUG to False.
-4. Create a Procfile with the following content:
+4. Copy the Heroku Redis URL, open the .env file and replace CACHE_LOCATION, CELERY_BROKER_URL and CELERY_RESULT_BACKEND with the copied Heroku Redis URL. Change DEBUG to False.
+5. With free and hobby dyno, you cannot scale to more than 1 dynos per process type. So, use Honcho, install Honcho. 
+ ```bash
+	 $ pip install honcho
+	 $ pip freeze > requirements.txt
+```
+6. Create a file ProcfileHoncho and add the following.
+ ```bash
+	 $ web: gunicorn equity.wsgi --log-file -
+	 $ worker1: celery -A equity beat -l info
+	 $ worker2: celery -A equity worker -l info
+```
+7. Create a Procfile and add the following.
   ```bash
-	 $ web: gunicorn equity.wsgi
-	 $ worker: celery -A equity worker -events -loglevel info 
-	 $ beat: celery -A equity beat 
+	 $ web: honcho start -f ProcfileHoncho
    ```
-5. Go to  settings<span>.</span>py file add 'whitenoise.middleware.WhiteNoiseMiddleware', in middleware, add 'heroku-app-name<span>.</span>herokuapp<span>.</span>com' in allowed hosts.
-6.  Go back to the terminal and run the following commands.
+8. Go to  settings<span>.</span>py file add 'whitenoise.middleware.WhiteNoiseMiddleware', in middleware, add 'heroku-app-name<span>.</span>herokuapp<span>.</span>com' in allowed hosts.
+9.  Go back to the terminal and run the following commands.
   ```bash
 	 $ git add .
 	 $ git commit -m "some message" 
 	 $ git push heroku master 
    ```
-7. Your web application will be live at https<span>://</span>heroku-app-name<span>.</span>herokuapp<span>.</span>com
+10. Your web application will be live at https<span>://</span>heroku-app-name<span>.</span>herokuapp<span>.</span>com
