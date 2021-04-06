@@ -5,7 +5,11 @@
       <form class="form-inline my-2 my-md-0" @submit.prevent="performSearch()">
         <div class="row">
           <div class="col-11">
-            <input class="form-control form-control-lg form-control-borderless" type="search" name="searchquery" placeholder="search by company name eg: abb ltd." v-model="query">
+            <select class="selectpicker" data-live-search="true" data-width="100%" name="searchquery" v-model="query">
+              {% for name in company_names %}
+                <option>{{ name }}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="col-1">
             <button class="btn btn-lg btn-success" type="submit">Search</button>
@@ -68,7 +72,7 @@
                 })
                 .then((result) => {
                     //console.log(result.company)
-                    if (_.findWhere(this.companies, result.company) == null) {
+                    if (_.findWhere(this.companies, result.company) == null && this.query) {
                       this.companies.push(result.company)
                     }
                 })
