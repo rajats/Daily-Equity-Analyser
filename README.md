@@ -14,14 +14,14 @@ This web application downloads the equity bhavcopy zip every day at 18:00 IST fo
 * The search is performed in backend using Redis.
 
 ## Setup Instructions
-1. Open terminal and install Redis
+1. Open the terminal and install Redis.
      ```bash
      $ wget http://download.redis.io/redis-stable.tar.gz
      $ tar xvzf redis-stable.tar.gz
      $ cd redis-stable
      $ make
      ```
-2. Start the Redis server by:
+2. Start the Redis server.
      ```bash
 	$ redis-start
 	```
@@ -55,15 +55,50 @@ An example .env file looks like:
 	 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
 	 CELERY_TIMEZONE = 'Asia/Kolkata'
    ``` 
- 7. To run the periodic task (download everyday at 18:00 IST), we need to start the celery worker and celery beat scheduler. Open a new terminal in the **virtual environment** and run the following command to start the celery worker.
+ 7. To run the periodic task (download everyday at 18:00 IST), we need to start the celery worker and celery beat scheduler. Open a new terminal cd to the project root, activate the **virtual environment** and run the following command to start the celery worker.
  ```bash
 	 $ celery -A equity worker -l info
    ```
-8. Again open a new terminal in the **virtual environment** and run the following command to start the celery beat scheduler.
+8. Again open a new terminal cd to the project root, activate the **virtual environment** and run the following command to start the celery beat scheduler.
  ```bash
-	 $ celery celery -A equity beat -l info
+	 $ celery -A equity beat -l info
    ```
 9. Now everything is ready, go back to terminal  where you did ```$ pip install -r requirements.txt``` and run the following command to start the web server.
  ```bash
 	 $ python manage.py runserver
    ```
+
+## Deployment Instructions for Heroku
+1. Open a new terminal cd to the project root, activate the **virtual environment** and install the Heroku CLI.
+ ```bash
+	 $ sudo snap install --classic heroku
+```
+2. Next, run the following commands.
+ ```bash
+	 $ pip install gunicorn
+	 $ pip install whitenoise
+	 $ pip freeze > requirements.txt
+   ```
+ 3. Create a Heroku app with Redis addon.
+ ```bash
+	 $ heroku addons:create heroku-redis:hobby-dev -a <heroku-app-name>
+   ```
+ 4. Change the credentials of Redis and Celery Broker with Heroku Redis credential.  To get the Heroku Redis credential type:
+ ```bash
+	 $ heroku config
+```
+3. Copy the Heroku Redis URL, open the .env file and replace CACHE_LOCATION, CELERY_BROKER_URL and CELERY_RESULT_BACKEND with the copied Heroku Redis URL. Change DEBUG to False.
+4. Create a Procfile with the following content:
+  ```bash
+	 $ web: gunicorn equity.wsgi
+	 $ worker: celery -A equity worker -events -loglevel info 
+	 $ beat: celery -A equity beat 
+   ```
+5. Go to  settings<span>.</span>py file add 'whitenoise.middleware.WhiteNoiseMiddleware', in middleware, add 'heroku-app-name<span>.</span>herokuapp<span>.</span>com' in allowed hosts.
+6.  Go back to the terminal and run the following commands.
+  ```bash
+	 $ git add .
+	 $ git commit -m "some message" 
+	 $ git push heroku master 
+   ```
+7. Your web application will be live at https<span>://</span>heroku-app-name<span>.</span>herokuapp<span>.</span>com
