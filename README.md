@@ -91,27 +91,27 @@ An example .env file looks like:
  ```bash
 	 $ heroku config
 ```
-4. Copy the Heroku Redis URL, open the .env file and replace CACHE_LOCATION, CELERY_BROKER_URL and CELERY_RESULT_BACKEND with the copied Heroku Redis URL. Change DEBUG to False.
-5. With free and hobby dyno, you cannot scale to more than 1 dynos per process type. So, use Honcho, install Honcho. 
+6. Copy the Heroku Redis URL, open the .env file and replace CACHE_LOCATION, CELERY_BROKER_URL and CELERY_RESULT_BACKEND with the copied Heroku Redis URL. Change DEBUG to False.
+7. With free and hobby dyno, you cannot scale to more than 1 dynos per process type. So, use Honcho, install Honcho. 
  ```bash
 	 $ pip install honcho
 	 $ pip freeze > requirements.txt
 ```
-6. Create a file ProcfileHoncho and add the following.
+8. Create a file ProcfileHoncho and add the following.
  ```bash
 	 $ web: gunicorn equity.wsgi --log-file -
 	 $ worker1: celery -A equity beat -l info
 	 $ worker2: celery -A equity worker -l info
 ```
-7. Create a Procfile and add the following.
+9. Create a Procfile and add the following.
   ```bash
 	 $ web: honcho start -f ProcfileHoncho
    ```
-8. Go to  settings<span>.</span>py file add 'whitenoise.middleware.WhiteNoiseMiddleware', in middleware, add 'heroku-app-name<span>.</span>herokuapp<span>.</span>com' in allowed hosts.
-9.  Go back to the terminal and run the following commands.
+10. Go to  settings<span>.</span>py file add 'whitenoise.middleware.WhiteNoiseMiddleware', in middleware, add 'heroku-app-name<span>.</span>herokuapp<span>.</span>com' in allowed hosts.
+11.  Go back to the terminal and run the following commands.
   ```bash
 	 $ git add .
 	 $ git commit -m "some message" 
 	 $ git push heroku master 
    ```
-10. Your web application will be live at https<span>://</span>heroku-app-name<span>.</span>herokuapp<span>.</span>com
+12. Your web application will be live at https<span>://</span>heroku-app-name<span>.</span>herokuapp<span>.</span>com
