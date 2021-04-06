@@ -38,16 +38,32 @@ This web application downloads the equity bhavcopy zip every day at 18:00 IST fo
 	$ pip3 install wheel
 	$ pip install -r requirements.txt
      ```
- 5. To run the periodic task (download everyday at 18:00 IST), we need to start the celery worker and celery beat scheduler. Open a new terminal in the **virtual environment** and run the following command to start the celery worker.
+ 5. Create .env file by running the following command in the same terminal.
+ ```bash
+	 $ touch .env
+   ```
+ 6. Open the .env file and write the following environment variables. 
+SECRET_KEY, DEBUG, CACHE_BACKEND , CACHE_LOCATION, CACHE_CLIENT_CLASS, CELERY_BROKER_URL, CELERY_RESULT_BACKEND, CELERY_TIMEZONE   
+An example .env file looks like:
+ ```bash
+	 SECRET_KEY = '6myxsg0(-u@9^fu)(#-e1l9)axxt^3s@b3p7=$-qw(@$36@lpi'
+	 DEBUG = True
+	 CACHE_BACKEND = 'django_redis.cache.RedisCache'
+	 CACHE_LOCATION = 'redis://127.0.0.1:6379/1'
+	 CACHE_CLIENT_CLASS = 'django_redis.client.DefaultClient'
+	 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
+	 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
+	 CELERY_TIMEZONE = 'Asia/Kolkata'
+   ``` 
+ 7. To run the periodic task (download everyday at 18:00 IST), we need to start the celery worker and celery beat scheduler. Open a new terminal in the **virtual environment** and run the following command to start the celery worker.
  ```bash
 	 $ celery -A equity worker -l info
    ```
-5. Again open a new terminal in the **virtual environment** and run the following command to start the celery beat scheduler.
+8. Again open a new terminal in the **virtual environment** and run the following command to start the celery beat scheduler.
  ```bash
 	 $ celery celery -A equity beat -l info
    ```
-6. Now everything is ready, go back to terminal  where you did ```$ pip install -r requirements.txt``` and run the following command to start the web server.
+9. Now everything is ready, go back to terminal  where you did ```$ pip install -r requirements.txt``` and run the following command to start the web server.
  ```bash
 	 $ python manage.py runserver
    ```
-
