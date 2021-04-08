@@ -23,7 +23,7 @@ This web application downloads the equity bhavcopy zip every day at 18:00 IST fo
      ```
 2. Start the Redis server.
      ```bash
-	$ redis-start
+	$ redis-server
 	```
 3. Make sure you have installed Python 3.6, [pip3](https://pip.pypa.io/en/latest/) and [virtualenv](http://www.virtualenv.org/en/latest/).
 4. Keeping the Redis server terminal open, open another new terminal and run the following command
